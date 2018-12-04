@@ -1,42 +1,43 @@
 -- Cau 1
 SELECT *
-FROM Products
-INNER JOIN Categories ON Products.categoryID = Categories.categoryID
-WHERE Categories.categoryName = 'Guitars' AND Products.listPrice > 500;
+FROM products
+INNER JOIN categories ON products.categoryID = categories.categoryID
+WHERE categories.categoryName = 'Guitars' AND products.listPrice > 500;
 
 -- Cau 2
 SELECT *
-FROM Products
+FROM products
 WHERE YEAR(dateAdded) = 2014 AND MONTH(dateAdded) = 7 AND listPrice > 300
 ORDER BY listPrice DESC;
 
 -- Cau 3
 SELECT *
-FROM Products
-INNER JOIN Categories ON Products.categoryID = Categories.categoryID
-WHERE Products.productName LIKE '%o%' AND  Categories.categoryName = 'Basses'
+FROM products
+INNER JOIN categories ON products.categoryID = categories.categoryID
+WHERE products.productName LIKE '%o%' AND  categories.categoryName = 'Basses'
 ORDER BY productName DESC;
 
 -- Cau4 
 SELECT *
-FROM (((Products
-INNER JOIN Orderitems ON Products.productID = Orderitems.productID)
-INNER JOIN Orders ON Orderitems.orderID = Orders.orderID)
-INNER JOIN Customers ON Orders.customerID = Customers.customerID)
-WHERE Customers.emailAddress LIKE '%@gmail.com%';
+FROM (((products
+INNER JOIN orderitems ON products.productID = orderitems.productID)
+INNER JOIN orders ON orderitems.orderID = orders.orderID)
+INNER JOIN customers ON orders.customerID = customers.customerID)
+WHERE customers.emailAddress LIKE '%@gmail.com%';
 
 -- Cau 5
 SELECT *
-FROM Products
+FROM products
 WHERE YEAR(dateAdded) = 2014 AND listPrice > 300 
 ORDER BY listPrice DESC
 LIMIT 4;
 
 -- Cau 6
-SELECT Addresses.city
-FROM ((((Addresses
-INNER JOIN Customers ON Addresses.customerID = Customers.customerID)
-INNER JOIN Orders ON Customers.customerID = Orders.customerID)
-INNER JOIN Orderitems ON Orders.orderID = Orderitems.orderID)
-INNER JOIN Products ON Orderitems.productID = Products.productID)
-WHERE Products.productName ='Yamaha FG700S';
+SELECT addresses.city
+FROM ((((addresses
+INNER JOIN customers ON addresses.customerID = customers.customerID)
+INNER JOIN orders ON customers.customerID = orders.customerID)
+INNER JOIN orderitems ON orders.orderID = orderitems.orderID)
+INNER JOIN products ON orderitems.productID = products.productID)
+WHERE products.productName ='Yamaha FG700S'
+GROUP BY addresses.city;
