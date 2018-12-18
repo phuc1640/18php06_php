@@ -74,9 +74,9 @@
 		if ($isSuccess) {
 			insertProduct($name, $description, $image, $price, $status, $created);
 			echo "Success";
-
+			header("Location: displayListProduct.php");
 		}
-		// header("Location : displayListProduct.php");
+		
 	}
 
 
