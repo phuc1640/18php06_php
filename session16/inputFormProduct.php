@@ -36,6 +36,45 @@
 	}
 	
 	?>
+
+	<?php
+	function validateImage($image) {
+		$target_dir = "image/";
+		$target_file = $target_dir . basename($image["name"]);
+		$uploadOk = true;
+		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+		// Check if image file is a actual image or fake image
+   		$check = getimagesize($image["tmp_name"]);
+   		if($check !== false) {
+	        // echo "File is an image - " . $check["mime"] . ".";
+	        $uploadOk = true;
+	        // Check if file already exists
+			if (file_exists($target_file)) {
+			    echo "Sorry, file already exists.";
+			    $uploadOk = false;
+			}
+
+			// Check file size
+			if ($image["size"] > 500000) {
+			    echo "Sorry, your file is too large.";
+			    $uploadOk = false;
+			}
+			// Allow certain file formats
+			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+			&& $imageFileType != "gif" ) {
+			    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+			    $uploadOk = false;
+			}
+	    } else {
+	        echo "File is not an image.";
+	        $uploadOk = false;
+	    }
+	    return $uploadOk;
+	}
+
+	?>
+
+
 	<?php
 	$errName = $errDescription = $errImage = $errPrice = $errStatus = "";
 	$name = $description = $image = $price = $status = "";
@@ -46,7 +85,7 @@
 		$created = date ("Y-m-d H:i:s");
 		$name = $_POST['name'];
 		$description = $_POST['description'];
-		$image = $_POST['image'];
+		$image = $_FILES['image'];
 		$price = $_POST['price'];
 		if (!empty($_POST['status'])) {
 			$status = $_POST['status'];
@@ -59,7 +98,7 @@
 			$errDescription = "Please input description";
 			$isSuccess = false;
 		}
-		if ($image == '') {
+		if ($image['name'] == '' || !validateImage($image)) {
 			$errImage = "Please input the image";
 			$isSuccess = false;
 		}
@@ -71,8 +110,12 @@
 			$errStatus = "Please input the status";
 			$isSuccess = false;
 		}
+		
 		if ($isSuccess) {
-			insertProduct($name, $description, $image, $price, $status, $created);
+			$target_dir = "image/";
+			$imageName = $target_dir . basename($image["name"]);
+			move_uploaded_file($image["tmp_name"], $imageName);
+			insertProduct($name, $description, $imageName, $price, $status, $created);
 			echo "Success";
 			header("Location: displayListProduct.php");
 		}
@@ -82,7 +125,7 @@
 
 	?>
 	<h1>Add Product</h1>
-	<form action="#" method='post'>
+	<form action="#" method='post' enctype="multipart/form-data">
 		<p>Name : <input type="text" name="name" value="<?php echo $name;?>"></p>
 		<p>
 			<?php
@@ -102,7 +145,7 @@
 			echo $errDescription;
 			?>
 		</p>
-		<p>Image : <input type="text" name="image" value="<?php echo $image;?>"></p>
+		<input type="file" name="image" id="image">
 		<p>
 			<?php
 			echo $errImage;

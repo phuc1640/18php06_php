@@ -12,5 +12,5 @@
 	}
 
 	$conn->close();
-	header("Location : displayListProduct.php");
+	header("Location: displayListProduct.php");
 ?>

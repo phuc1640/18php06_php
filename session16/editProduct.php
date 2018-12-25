@@ -58,7 +58,7 @@
 			$errImage = "Please input the image";
 			$isSuccess = false;
 		}
-		if ($price == '') {
+		if ($price == '' || !is_numeric($price)) {
 			$errPrice = "Please input the price";
 			$isSuccess = false;
 		}
@@ -69,9 +69,9 @@
 		if ($isSuccess) {
 			updateProduct($id, $name, $description, $image, $price, $status, $created);
 			echo "Success";
-
+			header("Location: displayListProduct.php");
 		}
-		// header("Location : displayListProduct.php");
+		
 	}
 ?>
 <!DOCTYPE html>

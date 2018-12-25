@@ -7,8 +7,8 @@
 			width: 100%;
 		}
 		table, th, td {
-		border: 1px solid black;
-		border-collapse: collapse;
+			border: 1px solid black;
+			border-collapse: collapse;
 		}
 	</style>
 </head>
@@ -45,7 +45,7 @@
 					<td>'.$row["description"].'</td>
 					<td>'.$row["image"].'</td>
 					<td>'.$row["created"].'</td>
-					<td>'.$row["status"].'</td>
+					<td>'.($row["status"]==1?'Con hang':'Het hang').'</td>
 					<td><a href="editProduct.php?id='.$row["idProduct"].'">Edit</a></td>
 					<td><a href="deleteProduct.php?id='.$row["idProduct"].'">Delete</a></td>
 				</tr>
