@@ -1,5 +1,4 @@
 <?php
-	$tableName = 'products';
 	function connectDb() {
 		$servername = "localhost";
 		$username = "root";

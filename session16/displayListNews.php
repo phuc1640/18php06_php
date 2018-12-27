@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Display Product</title>
+	<title>Display News</title>
 	<style>
 		table {
 			width: 100%;
@@ -16,22 +16,22 @@
 	<?php
 	include 'connectDb.php';
 	?>
-	<a href="addProduct.php">Add Product</a>
+	<a href="addNews.php">Add News</a>
 	<table>
 		<tr>
 			<th>Id</th>
-			<th>Name</th>
-			<th>Price</th>
+			<th>Title</th>
 			<th>Description</th>
+			<th>Content</th>
 			<th>Image</th>
-			<th>Date</th>
-			<th>Status</th>
+			<th>Created Date</th>
+			<th>Changed Date</th>
 			<th>Edit</th>
 			<th>Delete</th>
 		</tr>
 		<?php
 		$conn = connectDb();
-		$sql = "SELECT * FROM products";
+		$sql = "SELECT * FROM news";
 		$result = $conn->query($sql);
 
 		if ($result->num_rows > 0) {
@@ -39,15 +39,15 @@
 		    while($row = $result->fetch_assoc()) {
 		    	echo '
 		    	<tr>
-					<td>'.$row["idProduct"].'</td>
-					<td>'.$row["name"].'</td>
-					<td>'.$row["price"].'</td>
+					<td>'.$row["idNews"].'</td>
+					<td>'.$row["title"].'</td>
 					<td>'.$row["description"].'</td>
+					<td>'.$row["content"].'</td>
 					<td><img src="'.$row["image"].'" width="90px"></td>
-					<td>'.$row["created"].'</td>
-					<td>'.($row["status"]==1?'Con hang':'Het hang').'</td>
-					<td><a href="editProduct.php?id='.$row["idProduct"].'">Edit</a></td>
-					<td><a href="deleteProduct.php?id='.$row["idProduct"].'">Delete</a></td>
+					<td>'.$row["createdDate"].'</td>
+					<td>'.$row["changedDate"].'</td>
+					<td><a href="editNews.php?id='.$row["idNews"].'">Edit</a></td>
+					<td><a href="deleteNews.php?id='.$row["idNews"].'">Delete</a></td>
 				</tr>
 		    	';
 

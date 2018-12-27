@@ -3,20 +3,20 @@
 ?>
 <?php
 	$id = $_GET['id'];
-	$name = $description = $image = $price = $status = $created = "";
-	$errName = $errDescription = $errImage = $errPrice = $errStatus = "";
+	$title = $description = $image = $content = $createdDate = $changedDate = "";
+	$errTitle = $errDescription = $errImage = $errContent = "";
 	$conn = connectDb();
-	$sql = "SELECT * FROM products WHERE idProduct = $id";
+	$sql = "SELECT * FROM news WHERE idNews = $id";
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
 		    // output data of each row
 		    while($row = $result->fetch_assoc()) {
-		    	$name = $row["name"];
+		    	$title = $row["title"];
 		    	$description = $row["description"];
 		    	$image = $row["image"];
-		    	$price = $row["price"];
-		    	$status = $row["status"];
-		    	$created = $row["created"];
+		    	$content = $row["content"];
+		    	$createdDate = $row["createdDate"];
+		    	$changedDate = $row["changedDate"];
 
 		    }
 		}
@@ -56,9 +56,9 @@ function validateImage($image) {
 ?>
 
 <?php
-	function updateProduct($id, $name, $description, $image, $price, $status, $created) {
+	function updateNews($id, $title ,$description, $image, $content, $createdDate, $changedDate) {
 		$conn = connectDb();
-		$sql = "UPDATE products SET name='$name', description='$description', image='$image', price='$price', status='$status'  WHERE idProduct=$id";
+		$sql = "UPDATE news SET title='$title', description='$description', image='$image', content='$content', changedDate='$changedDate'  WHERE idNews=$id";
 		if ($conn->query($sql) === TRUE) {
 		    echo "Record updated successfully";
 		} else {
@@ -72,15 +72,14 @@ function validateImage($image) {
 	$message = "";
 	$isSuccess = true;
 	if(isset($_POST['save'])) {
-		$name = $_POST['name'];
+		$changedDate = date ("Y-m-d H:i:s");
+		$title = $_POST['title'];
 		$description = $_POST['description'];
 		$image = $_FILES['image'];
-		$price = $_POST['price'];
-		if (!empty($_POST['status'])) {
-			$status = $_POST['status'];
-		}
-		if ($name == '') {
-			$errName = "Please input name";
+		$content = $_POST['content'];
+		
+		if ($title == '') {
+			$errTitle = "Please input title";
 			$isSuccess = false;
 		}
 		if ($description == '') {
@@ -88,24 +87,22 @@ function validateImage($image) {
 			$isSuccess = false;
 		}
 		if ($image['name'] == '' || !validateImage($image)) {
-			$errImage = "Please input the image";
+			$errImage = "Please input image";
 			$isSuccess = false;
 		}
-		if ($price == '' || !is_numeric($price)) {
-			$errPrice = "Please input the price";
+		if ($content == '') {
+			$errContent = "Please input content";
 			$isSuccess = false;
 		}
-		if ($status == '') {
-			$errStatus = "Please input the status";
-			$isSuccess = false;
-		}
+		
 		if ($isSuccess) {
 			$target_dir = "image/";
 			$imageName = $target_dir . basename(uniqid() . $image["name"]);
+			echo "$imageName";
 			move_uploaded_file($image["tmp_name"], $imageName);
-			updateProduct($id, $name, $description, $imageName, $price, $status, $created);
+			updateNews($id, $title ,$description, $imageName, $content, $createdDate, $changedDate);
 			echo "Success";
-			header("Location: displayListProduct.php");
+			header("Location: displayListNews.php");
 		}
 		
 	}
@@ -118,23 +115,22 @@ function validateImage($image) {
 <body>
 	<h1>Edit Product</h1>
 	<form action="#" method='post' enctype="multipart/form-data">
-		<p>Name : <input type="text" name="name" value="<?php echo $name;?>"></p>
+		<p>Title : <input type="text" name="title" value="<?php echo $title;?>"></p>
 		<p>
 			<?php
-			echo $errName;
+			echo $errTitle;
 			?>
 		</p>
-		<p>Price : <input type="text" name="price" value="<?php echo $price;?>"></p>
-		<p>
-			<?php
-			echo $errPrice;
-			?>
-		</p>
-		<!-- <p>Description : <input type="text" name="description" value="<?php echo $description;?>"></p> -->
 		<p>Description : <textarea rows="4" cols="50" name="description"><?php echo $description;?></textarea></p>
 		<p>
 			<?php
 			echo $errDescription;
+			?>
+		</p>
+		<p>Content : <textarea rows="4" cols="50" name="content"><?php echo $content;?></textarea></p>
+		<p>
+			<?php
+			echo $errContent;
 			?>
 		</p>
 		<input type="file" name="image" id="image">
@@ -143,16 +139,7 @@ function validateImage($image) {
 			echo $errImage;
 			?>
 		</p>
-		<img src="<?php echo $image; ?>" width="90px">
-		<p>
-			<input type="radio" name="status" value="1" <?php if($status=='1') echo "checked"; ?>>Available<br>
-			<input type="radio" name="status" value="2" <?php if($status=='2') echo "checked"; ?>>Out of order<br>
-		</p>
-		<p>
-			<?php
-			echo $errStatus;
-			?>
-		</p>
+		<p><img src="<?php echo $image; ?>" width="90px"></p>
 		<input type="submit" name="save" value="Save">
 	</form>
 
