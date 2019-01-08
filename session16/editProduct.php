@@ -3,8 +3,8 @@
 ?>
 <?php
 	$id = $_GET['id'];
-	$name = $description = $image = $price = $status = $created = "";
-	$errName = $errDescription = $errImage = $errPrice = $errStatus = "";
+	$name = $description = $image = $price = $status = $created = $category = "";
+	$errName = $errDescription = $errImage = $errPrice = $errStatus = $errCategory = "";
 	$conn = connectDb();
 	$sql = "SELECT * FROM products WHERE idProduct = $id";
 	$result = $conn->query($sql);
@@ -17,7 +17,7 @@
 		    	$price = $row["price"];
 		    	$status = $row["status"];
 		    	$created = $row["created"];
-
+		    	$category = $row["idCategory"];
 		    }
 		}
 		$conn->close();
@@ -56,13 +56,14 @@ function validateImage($image) {
 ?>
 
 <?php
-	function updateProduct($id, $name, $description, $image, $price, $status, $created) {
+	function updateProduct($id, $name, $description, $image, $price, $status, $created, $category) {
 		$conn = connectDb();
-		$sql = "UPDATE products SET name='$name', description='$description', image='$image', price='$price', status='$status'  WHERE idProduct=$id";
+		$sql = "UPDATE products SET name='$name', description='$description', image='$image', price='$price', status='$status' ,idCategory='$category' WHERE idProduct=$id";
 		if ($conn->query($sql) === TRUE) {
 		    echo "Record updated successfully";
 		} else {
 		    echo "Error updating record: " . $conn->error;
+		    exit();
 		}
 
 		$conn->close();
@@ -76,6 +77,7 @@ function validateImage($image) {
 		$description = $_POST['description'];
 		$image = $_FILES['image'];
 		$price = $_POST['price'];
+		$category = $_POST['category'];
 		if (!empty($_POST['status'])) {
 			$status = $_POST['status'];
 		}
@@ -99,11 +101,15 @@ function validateImage($image) {
 			$errStatus = "Please input the status";
 			$isSuccess = false;
 		}
+		if ($category == '') {
+			$errCategory = "Please input the category";
+			$isSuccess = false;
+		}
 		if ($isSuccess) {
 			$target_dir = "image/";
 			$imageName = $target_dir . basename(uniqid() . $image["name"]);
 			move_uploaded_file($image["tmp_name"], $imageName);
-			updateProduct($id, $name, $description, $imageName, $price, $status, $created);
+			updateProduct($id, $name, $description, $imageName, $price, $status, $created, $category);
 			echo "Success";
 			header("Location: displayListProduct.php");
 		}
@@ -144,6 +150,30 @@ function validateImage($image) {
 			?>
 		</p>
 		<img src="<?php echo $image; ?>" width="90px">
+		<p>Category : 
+			<select name="category">
+				<option value="">Choose category</option>
+				<?php
+				$conn = connectDb();
+				$sql = "SELECT * FROM category";
+				$result = $conn->query($sql);
+				if ($result->num_rows > 0) {
+			    // output data of each row
+			    while($row = $result->fetch_assoc()) {
+				?>
+				<option value="<?php echo $row["idCategory"]; ?>" <?php if($category == $row["idCategory"]) echo "selected"; ?>><?php echo $row["name"]; ?></option>
+
+				<?php
+					}
+				}
+				?>
+			</select>
+		</p>
+		<p>
+			<?php
+			echo $errCategory;
+			?>
+		<!-- </p> -->
 		<p>
 			<input type="radio" name="status" value="1" <?php if($status=='1') echo "checked"; ?>>Available<br>
 			<input type="radio" name="status" value="2" <?php if($status=='2') echo "checked"; ?>>Out of order<br>

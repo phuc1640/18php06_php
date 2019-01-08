@@ -3,23 +3,26 @@
 <html>
 <head>
 	<title>Add Products</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 </head>
 <body>
 	<?php
 	$tableName = 'products';
 	include 'connectDb.php';
-	function insertProduct($name ,$description, $image, $price, $status, $created) {
+	function insertProduct($name ,$description, $image, $price, $status, $created, $category) {
 		$message = "";
 		global $tableName;
 		$conn = connectDb();		 
-		$sql = "INSERT INTO $tableName (name, description, image, price, status, created)
-		VALUES ('$name', '$description', '$image', '$price', '$status', '$created')";
+		$sql = "INSERT INTO products (name, description, image, price, status, created, idCategory)
+		VALUES ('$name', '$description', '$image', '$price', '$status', '$created', '$category')";
 
 		if ($conn->query($sql) === TRUE) {
 		    $message = "Thanh cong";
-		    // header("Location : displayListProduct.php");
+		    var_dump($sql);
 		} else {
 		    $message = "Error: " . $sql . "<br>" . $conn->error;
+		    exit();
 		}
 		$conn->close();
 		return $message;
@@ -62,8 +65,8 @@
 
 
 	<?php
-	$errName = $errDescription = $errImage = $errPrice = $errStatus = "";
-	$name = $description = $image = $price = $status = "";
+	$errName = $errDescription = $errImage = $errPrice = $errStatus = $errCategory = "";
+	$name = $description = $image = $price = $status = $category = "";
 	
 	$message = "";
 	$isSuccess = true;
@@ -73,6 +76,7 @@
 		$description = $_POST['description'];
 		$image = $_FILES['image'];
 		$price = $_POST['price'];
+		$category = $_POST['category'];
 		if (!empty($_POST['status'])) {
 			$status = $_POST['status'];
 		}
@@ -96,14 +100,18 @@
 			$errStatus = "Please input the status";
 			$isSuccess = false;
 		}
+		if ($category == '') {
+			$errCategory = "Please input the category";
+			$isSuccess = false;
+		}
 		
 		if ($isSuccess) {
 			$target_dir = "image/";
 			$imageName = $target_dir . basename(uniqid() . $image["name"]);
-			move_uploaded_file($image["tmp_name"], $imageName);
-			insertProduct($name, $description, $imageName, $price, $status, $created);
+			// move_uploaded_file($image["tmp_name"], $imageName);
+			// insertProduct($name, $description, $imageName, $price, $status, $created, $category);
 			echo "Success";
-			header("Location: displayListProduct.php");
+			// header("Location: displayListProduct.php");
 		}
 		
 	}
@@ -111,43 +119,69 @@
 
 	?>
 	<h1>Add Product</h1>
-	<form action="#" method='post' enctype="multipart/form-data">
+	<form action="#" method='post' enctype="multipart/form-data" onsubmit="return addProductValidate()">
 		<p>Name : <input type="text" name="name" value="<?php echo $name;?>"></p>
-		<p>
+		<p id="checkName">
 			<?php
 			echo $errName;
 			?>
 		</p>
 		<p>Price : <input type="text" name="price" value="<?php echo $price;?>"></p>
-		<p>
+		<p id="checkPrice">
 			<?php
 			echo $errPrice;
 			?>
 		</p>
-		<!-- <p>Description : <input type="text" name="description" value="<?php echo $description;?>"></p> -->
 		<p>Description : <textarea rows="4" cols="50" name="description"><?php echo $description;?></textarea></p>
-		<p>
+		<p id="checkDescription">
 			<?php
 			echo $errDescription;
 			?>
 		</p>
 		<input type="file" name="image" id="image">
-		<p>
+		<p id="checkImage">
 			<?php
 			echo $errImage;
+			?>
+		</p>
+		<p>Category : 
+			<select name="category">
+				<option value="">Choose category</option>
+				<?php
+				$conn = connectDb();
+				$sql = "SELECT * FROM category";
+				$result = $conn->query($sql);
+				if ($result->num_rows > 0) {
+			    // output data of each row
+			    while($row = $result->fetch_assoc()) {
+				?>
+				<option value="<?php echo $row["idCategory"]; ?>" <?php if($category == $row["idCategory"]) echo "selected"; ?>><?php echo $row["name"]; ?></option>
+
+				<?php
+					}
+				}
+				?>
+			</select>
+		</p>
+		<p id="checkCategory">
+			<?php
+			echo $errCategory;
 			?>
 		</p>
 		<p>
 			<input type="radio" name="status" value="1" <?php if($status=='1') echo "checked"; ?>>Available<br>
 			<input type="radio" name="status" value="2" <?php if($status=='2') echo "checked"; ?>>Out of order<br>
 		</p>
-		<p>
+		<p id="checkStatus">
 			<?php
 			echo $errStatus;
 			?>
 		</p>
 		<input type="submit" name="save" value="Save">
+		<input type="button" name="button" value="Đăng nhập" id="save">
 	</form>
 
+
+	<script type="text/javascript" src="js/addProduct.js"></script>
 </body>
 </html>

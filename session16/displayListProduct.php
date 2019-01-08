@@ -26,8 +26,10 @@
 			<th>Image</th>
 			<th>Date</th>
 			<th>Status</th>
+			<th>Category</th>
 			<th>Edit</th>
 			<th>Delete</th>
+
 		</tr>
 		<?php
 		$conn = connectDb();
@@ -46,6 +48,7 @@
 					<td><img src="'.$row["image"].'" width="90px"></td>
 					<td>'.$row["created"].'</td>
 					<td>'.($row["status"]==1?'Con hang':'Het hang').'</td>
+					<td>'.$row["idCategory"].'</td>
 					<td><a href="editProduct.php?id='.$row["idProduct"].'">Edit</a></td>
 					<td><a href="deleteProduct.php?id='.$row["idProduct"].'">Delete</a></td>
 				</tr>

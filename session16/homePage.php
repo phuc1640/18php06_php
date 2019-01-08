@@ -329,6 +329,7 @@
                     <?php 
                         }
                     }
+                    $conn->close();
                     ?>
                 </div>
                 <!-- /.row -->
@@ -375,11 +376,19 @@
                 <!-- /.row -->
                 <div class="row">
                     <!-- RIGHT HERE 2 -->
+                    <?php
+                        $conn = connectDb();
+                        $sql = "SELECT * FROM news";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result->fetch_assoc()) {
+                    ?>
                     <div class="col-md-4 text-center col-sm-6 col-xs-6">
                         <div class="thumbnail product-box">
-                            <img src="assets/img/dummyimg.png" alt="" />
+                            <img src="<?php echo $row["image"]?>" alt="" />
                             <div class="caption">
-                                <h3><a href="#">Samsung Galaxy </a></h3>
+                                <h3><a href="#"><?php echo $row["title"]?>"</a></h3>
                                 <p>Price : <strong>$ 3,45,900</strong>  </p>
                                 <p><a href="#">Ptional dismiss button </a></p>
                                 <p>Ptional dismiss button in tional dismiss button in   </p>
@@ -390,6 +399,11 @@
                             </div>
                         </div>
                     </div>
+
+                    <?php 
+                        }
+                    }
+                    ?>
                 </div>
                 <!-- /.row -->
                 <div class="row">
