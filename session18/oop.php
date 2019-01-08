@@ -46,10 +46,21 @@ class User
 
 	
 class Customer extends User
-{
+{	
+	var $idCustomer;
 	function __construct()
 	{
 		
+	}
+
+	public function Pay()
+	{
+		# code...
+	}
+
+	public function History()
+	{
+		# code...
 	}
 }
 
