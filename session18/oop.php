@@ -10,7 +10,7 @@ class User
 	
 	function __construct()
 	{
-		
+		$this->name = "phuc";
 	}
 
 	private function Add()
@@ -34,7 +34,8 @@ class User
 	}
 
 	public function View()
-	{
+	{	
+		echo $this->name;
 		echo "View<br>";
 	}
 

@@ -22,6 +22,18 @@
 			return $message;
 		}
 
+		function updateNews($id, $title ,$description, $image, $content, $createdDate, $changedDate) {
+			$conn = $this->connect_db();
+			$sql = "UPDATE news SET title='$title', description='$description', image='$image', content='$content', changedDate='$changedDate'  WHERE idNews=$id";
+			if ($conn->query($sql) === TRUE) {
+			    echo "Record updated successfully";
+			} else {
+			    echo "Error updating record: " . $conn->error;
+			    exit();
+			}
+
+		}
+
 		function validateImage($image) {
 			$target_dir = "image/";
 			$target_file = $target_dir . basename($image["name"]);
@@ -32,8 +44,7 @@
 	   		if($check !== false) {
 		        // echo "File is an image - " . $check["mime"] . ".";
 		        $uploadOk = true;
-		        // Check if file already exists
-				
+		        
 				// Check file size
 				if ($image["size"] > 500000) {
 				    echo "Sorry, your file is too large.";

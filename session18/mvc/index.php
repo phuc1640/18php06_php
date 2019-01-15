@@ -5,6 +5,4 @@
 	include 'controller/home_controller.php';
 	$controller = new HomeController();
 	$controller->handleRequest();
-	// $controller->insertNewsView();
-	// $controller->newsView();
 ?>

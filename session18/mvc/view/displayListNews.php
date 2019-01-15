@@ -41,8 +41,8 @@
 						<td><img src="'.$row["image"].'" width="90px"></td>
 						<td>'.$row["createdDate"].'</td>
 						<td>'.$row["changedDate"].'</td>
-						<td><a href="editNews.php?id='.$row["idNews"].'">Edit</a></td>
-						<td><a href="view/deleteNews.php?id='.$row["idNews"].'">Delete</a></td>
+						<td><a href="index.php?id='.$row["idNews"].'&requestView=editNews">Edit</a></td>
+						<td><a href="index.php?id='.$row["idNews"].'&requestView=deleteNews">Delete</a></td>
 					</tr>
 			    	';
 
