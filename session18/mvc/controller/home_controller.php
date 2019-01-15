@@ -12,7 +12,8 @@
 			$action = isset($_GET['requestView'])?$_GET['requestView']:"home";
 			switch ($action) {
 				case 'home':
-					$this->insertNewsView();
+					echo "<br>";
+					echo "HOME";
 					break;
 				case 'displayListNews':
 					$this->newsView();
@@ -26,7 +27,7 @@
 					$this->editNews($id);
 					break;	
 				default:
-					# code...
+					$this->insertNewsView();
 					break;
 			}
 			
@@ -78,7 +79,6 @@
 
 		public function newsView()
 		{	
-			
 			$conn = $this->model->connect_db();
 			$sql = "SELECT * FROM news";
 			$result = $conn->query($sql);

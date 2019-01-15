@@ -13,7 +13,6 @@
 	</style>
 </head>
 <body>
-	<a href="addNews.php">Add News</a>
 	<table>
 		<tr>
 			<th>Id</th>
