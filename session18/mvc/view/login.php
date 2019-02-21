@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Add News</title>
+	<title>Login</title>
 </head>
 <body>
 	

@@ -33,7 +33,8 @@
 					$this->admin();
 					break;	
 				default:
-					$this->insertNewsView();
+					echo "<br>";
+					echo "HOME";
 					break;
 			}
 			
