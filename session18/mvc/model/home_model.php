@@ -63,6 +63,24 @@
 		    return $uploadOk;
 		}
 
+		public function login($username ,$password)
+		{
+			$conn = $this->connect_db();
+			$sql = "SELECT * FROM users";
+			$result = $conn->query($sql);
+			$isLogin = false;
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+			    	if ($username == $row["username"] && $password == $row["password"]) {
+			    		$isLogin = true;
+			    		break;
+			    	}
+			    }
+			}
+			return $isLogin;
+
+		}
+
 	}
 
 ?>

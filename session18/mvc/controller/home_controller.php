@@ -26,6 +26,12 @@
 					$id = $_GET['id'];
 					$this->editNews($id);
 					break;	
+				case 'login':
+					$this->login();
+					break;	
+				case 'admin':
+					$this->admin();
+					break;	
 				default:
 					$this->insertNewsView();
 					break;
@@ -152,6 +158,52 @@
 				}	
 			}
 			include 'view/editNews.php';
+		}
+
+		public function login()
+		{
+			$errUsername = $errPassword = "";
+			$username = $password =  "";
+
+			$message = "";
+			$isSuccess = true;
+			if(isset($_POST['login'])) {
+				$username = $_POST['username'];
+				$password = $_POST['password'];
+				
+				if ($username == '') {
+					$errUsername = "Please input username";
+					$isSuccess = false;
+				}
+
+				if ($password == '') {
+					$errPassword = "Please input password";
+					$isSuccess = false;
+				}
+								
+				if ($isSuccess) {
+					if ($this->model->login($username ,$password)) {
+						$_SESSION['username'] = $username;
+						header("Location: index.php?requestView=admin");
+					}
+					
+				}
+				
+			}
+			include 'view/login.php';
+		}
+
+		public function admin()
+		{
+			if (!isset($_SESSION['username'])) {
+			header("Location: index.php?requestView=login");
+			}
+			if(isset($_POST['logout'])) {
+				unset($_SESSION['username']);
+				header("Location: index.php?requestView=login");
+			}
+			echo "admin";
+			include 'view/admin.php';
 		}
 	}
 
